@@ -8,7 +8,7 @@ from pathlib import Path
 import requests
 
 HEADERS = {"User-Agent": "india-route-agent/1.0 (student project)"}
-TIMEOUT = 25
+TIMEOUT = 10
 PLANS_DIR = Path("plans")
 
 
