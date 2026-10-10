@@ -20,7 +20,7 @@ if not API_KEY:
     st.error("LLM_API_KEY is missing. Copy .env.example to .env and add your key.")
     st.stop()
 
-client = OpenAI(api_key=API_KEY, base_url=BASE_URL, timeout=40, max_retries=1)
+   client = OpenAI(api_key=API_KEY, base_url=BASE_URL, timeout=40, max_retries=1)
 
 if "chat" not in st.session_state:
     st.session_state.chat = []
