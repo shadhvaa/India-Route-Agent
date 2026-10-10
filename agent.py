@@ -36,13 +36,23 @@ def run_agent(user_message, history, client, model, max_steps=8):
         if not msg.tool_calls:
             return msg.content or "", trace
 
+        tool_calls_payload = []
+        for tc in msg.tool_calls:
+            entry = {
+                "id": tc.id,
+                "type": "function",
+                "function": {"name": tc.function.name, "arguments": tc.function.arguments},
+            }
+            # Gemini 3 needs its thought_signature sent back with the tool call
+            extra = (getattr(tc, "model_extra", None) or {}).get("extra_content")
+            if extra:
+                entry["extra_content"] = extra
+            tool_calls_payload.append(entry)
+
         messages.append({
             "role": "assistant",
             "content": msg.content or "",
-            "tool_calls": [
-                {"id": tc.id, "type": "function", "function": {"name": tc.function.name, "arguments": tc.function.arguments}}
-                for tc in msg.tool_calls
-            ],
+            "tool_calls": tool_calls_payload,
         })
 
         # Execute every requested tool and feed the observation back to the model
